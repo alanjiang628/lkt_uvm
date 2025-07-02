@@ -1,0 +1,16 @@
+Overalle
+该模块主要功能是通过二维的查找表方式,软件可以配置来选选择性激活某些预设的选择项以获得想要结果。
+
+Feature
+Zh 1hot lookup table-Fun-001 支持lookup table的大小通过参数配置,其中NUM_LOOKUPS表示同时查找项个数;NUM_CHOICES表示每个查找项的要选择结果个数;
+RESULT_WIDTH表示每个选择项的数据位宽;以上均可以参数配置位宽
+Zh_1hot_lookup_table-Fun-002 支持每个查找项最多只能选择一个结果输出。
+Zh_1hot_lookup_table-Fun-003 支持选择项为0表示不选择任何数据,对应查找项结果输出全为0
+
+Function Architecture
+下图演示两种模块处理场景:
+假如lookup table i按照{dll,d10,d9,d8d7d6,d5,d4,d3,d2,d1,d0}依次排列,其中每个数据的位宽为RESULT WIDTH。
+查找项为NUM LOOKUPS=4;选择项为NUM CHOICES=3; 
+第一种情况:每个一个查找项都有一个选择项为1,将对应的选择项的数据输出;
+第二种情况:第四个查找项的选择项全0表示不选择任可一个数据,那么对应的查找项输出为0。
+第三种情况:第四个查找项的选择项有两个1,这种该模块不支持,输出结果非预期。

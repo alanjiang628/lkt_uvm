@@ -1,0 +1,7 @@
+lk_table_cfg_basic_test
+lk_table_cfg_boundary_test
+lk_table_func_one_hot_all_test
+lk_table_func_randomized_test
+lk_table_func_no_choice_test
+lk_table_func_one_hot_mixed_test
+lk_table_neg_multi_hot_test

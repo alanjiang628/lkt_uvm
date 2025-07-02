@@ -1,0 +1,26 @@
+Test Group,Test Name,Test Purpose,Test Procedure,Check Point
+Configuration,lk_table_cfg_boundary,"Verify the module works correctly with minimum and maximum parameter configurations.","1. Configure the DUT with boundary values for NUM_LOOKUPS, NUM_CHOICES, and RESULT_WIDTH (e.g., min and max supported values).
+2. Drive a randomized lookup_table_i.
+3. For each lookup item, drive a valid one-hot selector in input_i.
+4. Repeat for several random one-hot selections.","Verify that the output_o correctly reflects the selected data from lookup_table_i for each lookup item, matching the value at the one-hot position."
+Configuration,lk_table_cfg_basic,"Verify the module works correctly with typical parameter configurations.","1. Configure the DUT with typical values for NUM_LOOKUPS, NUM_CHOICES, and RESULT_WIDTH.
+2. Drive a randomized lookup_table_i.
+3. For each lookup item, drive a valid one-hot selector in input_i.
+4. Repeat for several random one-hot selections.","Verify that the output_o correctly reflects the selected data from lookup_table_i for each lookup item."
+Core Functionality,lk_table_func_one_hot_all,"Verify that all lookup items can correctly select a specific data entry simultaneously.","1. Configure the DUT with typical parameters.
+2. Drive a randomized lookup_table_i.
+3. Drive input_i so that each lookup item selects a specific choice (e.g., all select index 0, then all select the last index).","Verify that each segment of output_o matches the corresponding data from the selected column in the logical lookup table."
+Core Functionality,lk_table_func_randomized,"Verify correct operation with fully randomized one-hot selectors for all lookup items.","1. Configure the DUT with typical parameters.
+2. Drive a randomized lookup_table_i.
+3. For each lookup item, drive a randomly generated, valid one-hot selector in input_i.
+4. Repeat multiple times with different random seeds.","For each lookup item, verify that the corresponding slice of output_o matches the data from lookup_table_i at the position indicated by the one-hot selector."
+Core Functionality,lk_table_func_no_choice,"Verify the all-zero selection feature, where no data is chosen.","1. Configure the DUT with typical parameters.
+2. Drive a randomized lookup_table_i.
+3. Drive input_i with all-zero selectors for all lookup items.","Verify that the entire output_o vector is all zeros."
+Core Functionality,lk_table_func_one_hot_mixed,"Verify correct operation with a mix of one-hot and all-zero selectors.","1. Configure the DUT with typical parameters.
+2. Drive a randomized lookup_table_i.
+3. Drive input_i with a random mix of valid one-hot selectors and all-zero selectors across the different lookup items.","- For items with a one-hot selector, verify the output slice matches the selected data.
+- For items with an all-zero selector, verify the output slice is all zeros."
+Negative Testing,lk_table_neg_multi_hot,"Verify the module's behavior when an unsupported multi-hot selector is provided. The output is not strictly defined, but it should not cause simulation to hang or crash.","1. Configure the DUT with typical parameters.
+2. Drive a randomized lookup_table_i.
+3. Drive input_i with at least one multi-hot selector (more than one bit set to '1') for one or more lookup items.","The primary check is that the simulation completes without fatal errors. The output value for the affected item is 'don't care' but should be observed and noted. It should not affect the outputs of other items that have valid selectors."
