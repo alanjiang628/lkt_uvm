@@ -14,7 +14,7 @@ class lkt_monitor extends uvm_monitor;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if(!uvm_config_db#(virtual lkt_if)::get(this, "", "vif", vif))
+        if(!uvm_config_db#(virtual lkt_if)::get(null, "uvm_test_top", "vif", vif))
             `uvm_fatal("NO_IF", "Virtual interface not found!")
     endfunction
 

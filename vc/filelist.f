@@ -6,6 +6,7 @@
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/msic
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/sequences
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/tests
++incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/tb
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/rtl
 
 # Timescale
@@ -18,6 +19,7 @@
 /mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/interface/lkt_if.sv
 
 # UVM Environment Packages
+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/tb/lkt_config_pkg.sv
 /mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/env/lkt_env_pkg.sv
 
 # Sequence Package

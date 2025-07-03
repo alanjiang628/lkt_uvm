@@ -137,19 +137,28 @@ all_regression: clean_build compile
 	@echo "[ALL_REGRESSION] Running full regression..."
 	@$(MAKE) regression
 
-run: compile
+run: compile $(TEST_BUILD_DIR)/dump_fsdb.tcl
 	@test -n "$(TEST)" || { echo "Error: TEST variable not defined"; exit 1; }
 	@echo "[TEST] Running $(TEST)"
 	@cd $(TEST_BUILD_DIR) && \
 	$(RUN_CMD) +UVM_TESTNAME=$(TEST) \
 	-cm line+cond+fsm+tgl+branch \
 	-cm_dir ../coverage \
+	-ucli -do dump_fsdb.tcl \
 	-l ../logs/run.log
 	@if grep -q "UVM_ERROR" $(TEST_LOG_DIR)/run.log; then \
 		echo "[TEST] $(TEST) FAILED" > $(TEST_LOG_DIR)/result.txt; \
 	else \
 		echo "[TEST] $(TEST) PASSED" > $(TEST_LOG_DIR)/result.txt; \
 	fi
+
+$(TEST_BUILD_DIR)/dump_fsdb.tcl:
+	@mkdir -p $(TEST_WAVE_DIR)
+	@echo 'fsdbDumpfile "../waves/$(TEST).fsdb"' > $@
+	@echo 'fsdbDumpvars 0 "tb_top"' >> $@
+	@echo 'fsdbDumpvars +mda' >> $@
+	@echo 'run' >> $@
+	@echo 'quit' >> $@
 
 # -------------------------------
 # 回归测试

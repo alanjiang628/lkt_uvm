@@ -57,11 +57,11 @@ class lkt_scoreboard extends uvm_scoreboard;
 
         // Comparison
         if (tr.output_o.size() != expected_output.size() || tr.output_o != expected_output) begin
-            `uvm_error("SCOREBOARD_ERR", $sformatf("Output mismatch!\n\tInput: 0x%h\n\tExpected: 0x%h\n\tActual: 0x%h",
+            `uvm_error("SCOREBOARD_ERR", $sformatf("Output mismatch!\n\tInput: %p\n\tExpected: %p\n\tActual: %p",
                                                  tr.input_i, expected_output, tr.output_o))
             error_count++;
         end else begin
-            `uvm_info("SCOREBOARD_PASS", "Output match!", UVM_HIGH)
+            `uvm_info("SCOREBOARD_PASS", "Output match!", UVM_LOW)
             pass_count++;
         end
     endfunction

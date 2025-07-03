@@ -7,7 +7,7 @@ class lkt_env extends uvm_env;
     lkt_config    cfg;
     lkt_agent     agent;
     lkt_scoreboard scoreboard;
-    // lkt_coverage coverage; // Placeholder for future coverage component
+    lkt_coverage coverage;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
@@ -25,9 +25,9 @@ class lkt_env extends uvm_env;
             scoreboard = lkt_scoreboard::type_id::create("scoreboard", this);
         end
 
-        // if(cfg.enable_coverage) begin
-        //     coverage = lkt_coverage::type_id::create("coverage", this);
-        // end
+        if(cfg.enable_coverage) begin
+            coverage = lkt_coverage::type_id::create("coverage", this);
+        end
     endfunction
 
     function void connect_phase(uvm_phase phase);
@@ -36,9 +36,9 @@ class lkt_env extends uvm_env;
             agent.monitor.ap.connect(scoreboard.mon_imp);
         end
 
-        // if(cfg.enable_coverage) begin
-        //     agent.monitor.ap.connect(coverage.analysis_export);
-        // end
+        if(cfg.enable_coverage) begin
+            agent.monitor.ap.connect(coverage.analysis_export);
+        end
     endfunction
 
 endclass

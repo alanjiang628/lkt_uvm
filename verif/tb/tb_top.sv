@@ -49,10 +49,6 @@ module tb_top;
         // Place virtual interface in config_db
         uvm_config_db#(virtual lkt_if)::set(null, "uvm_test_top", "vif", vif);
         
-        // Waveform dumping
-        $fsdbDumpfile("lkt_sim.fsdb");
-        $fsdbDumpvars(0, tb_top);
-
         // Run the test
         run_test();
     end

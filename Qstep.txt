@@ -6,3 +6,4 @@
 6. Makefile请直接拷贝过来；
 7. 目录结构要保持一致；
 8. 请完整地构造testplan,md中的所有tests，不要有遗漏，test name保持一致
+9. 帮忙根据testplan.md中function coverage的描述，结合signal_conditoner_uvm中定义function coverage的方法，补充所有的function coverage

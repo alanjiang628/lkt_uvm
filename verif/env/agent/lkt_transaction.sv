@@ -89,7 +89,7 @@ class lkt_transaction extends uvm_sequence_item;
     // 自定义方法 (可选)
     // ==============================================
     function string convert2string();
-        return $sformatf("input_i=0x%h output_o=0x%h",
+        return $sformatf("input_i=%p output_o=%p",
                         input_i, output_o);
     endfunction
 
