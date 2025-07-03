@@ -3,6 +3,7 @@
 
 package lkt_agent_pkg;
   import uvm_pkg::*;
+  `include "lkt_config.sv"
   `include "lkt_transaction.sv"
   `include "lkt_driver.sv"
   `include "lkt_monitor.sv"

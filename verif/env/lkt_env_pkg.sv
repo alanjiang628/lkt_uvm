@@ -8,7 +8,6 @@ package lkt_env_pkg;
     import uvm_pkg::*;
     import lkt_agent_pkg::*;
 
-    `include "lkt_config.sv"
     `include "components/lkt_scoreboard.sv"
     `include "components/lkt_coverage.sv"
     `include "lkt_env.sv"

@@ -4,6 +4,7 @@
 package lkt_test_pkg;
     import uvm_pkg::*;
     import lkt_config_pkg::*; // Import the new config package
+    import lkt_agent_pkg::*;  // Import agent package for lkt_config
     import lkt_env_pkg::*;
     import lkt_seq_pkg::*;
 
@@ -33,9 +34,6 @@ package lkt_test_pkg;
 
             // Allow test-specific overrides
             configure_test(cfg);
-
-            if(!uvm_config_db#(virtual lkt_if)::get(this, "", "vif", cfg.vif))
-                `uvm_fatal("NO_IF", "Virtual interface not found")
 
             uvm_config_db#(lkt_config)::set(this, "*", "config", cfg);
             env = lkt_env::type_id::create("env", this);
@@ -130,12 +128,11 @@ package lkt_test_pkg;
         
         virtual function void configure_test(lkt_config cfg);
             super.configure_test(cfg);
-            // Example of boundary config
-            if ($urandom_range(0,1)) begin
-                cfg.NUM_LOOKUPS = 1; cfg.NUM_CHOICES = 1; cfg.RESULT_WIDTH = 1;
-            end else begin
-                cfg.NUM_LOOKUPS = 16; cfg.NUM_CHOICES = 16; cfg.RESULT_WIDTH = 8; // Max example
-            end
+            // This test now relies on the compile-time macro `BOUNDARY_TEST`
+            // to set the physical DUT/interface parameters.
+            // The UVM config object will automatically match these values
+            // when it's constructed in the base_test's build_phase.
+            // No further configuration is needed here.
         endfunction
 
         task run_phase(uvm_phase phase);

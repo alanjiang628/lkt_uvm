@@ -11,30 +11,20 @@ class lk_table_func_one_hot_all_seq extends base_sequence;
     endfunction
 
     task body();
-        // Declare all local variables at the top of the task
-        lkt_config cfg;
         int final_choice_index;
 
-        // 1. Get config from sequencer to know DUT dimensions
-        if(!uvm_config_db#(lkt_config)::get(m_sequencer, "", "config", cfg))
-           `uvm_fatal("SEQ_CFG_ERR", "Could not get config object in sequence")
-
-        // 2. Create and size the transaction object
         req = lkt_transaction::type_id::create("req");
-        start_item(req);
+        start_item(req); // This calls pre_body, which gets the cfg object
         
-        req.RESULT_WIDTH = cfg.RESULT_WIDTH;
-        req.NUM_LOOKUPS  = cfg.NUM_LOOKUPS;
-        req.NUM_CHOICES  = cfg.NUM_CHOICES;
+        // Allocate memory for dynamic arrays now that cfg is available
+        req.input_i = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
+        req.lookup_table_i = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES * cfg.RESULT_WIDTH];
+        req.output_o = new[cfg.NUM_LOOKUPS * cfg.RESULT_WIDTH];
 
-        req.lookup_table_i = new[cfg.RESULT_WIDTH * cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
-        req.input_i        = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
-        req.output_o       = new[cfg.RESULT_WIDTH * cfg.NUM_LOOKUPS];
-
-        // 3. Randomize the transaction (lookup_table_i will be random)
+        // Randomize the transaction first
         assert(req.randomize());
 
-        // 4. Manually construct the specific input_i pattern for this test
+        // Post-randomization: manually set the one-hot pattern
         final_choice_index = (choice_index == -1) ? (cfg.NUM_CHOICES - 1) : choice_index;
         for (int i = 0; i < cfg.NUM_LOOKUPS; i++) begin
             int base_idx = i * cfg.NUM_CHOICES;

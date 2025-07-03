@@ -4,6 +4,7 @@
 class lkt_monitor extends uvm_monitor;
     virtual lkt_if vif;
     uvm_analysis_port #(lkt_transaction) ap;
+    lkt_config cfg;
 
     `uvm_component_utils(lkt_monitor)
 
@@ -14,8 +15,10 @@ class lkt_monitor extends uvm_monitor;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if(!uvm_config_db#(virtual lkt_if)::get(null, "uvm_test_top", "vif", vif))
+        if(!uvm_config_db#(virtual lkt_if)::get(this, "", "vif", vif))
             `uvm_fatal("NO_IF", "Virtual interface not found!")
+        if(!uvm_config_db#(lkt_config)::get(this, "", "config", cfg))
+            `uvm_fatal("NO_CFG", "Config object not found!")
     endfunction
 
     task run_phase(uvm_phase phase);
@@ -25,15 +28,10 @@ class lkt_monitor extends uvm_monitor;
             #1; // Wait for combinatorial logic to settle
             tr = lkt_transaction::type_id::create("tr");
 
-            // Set DUT parameters in transaction for context
-            tr.RESULT_WIDTH = vif.RESULT_WIDTH;
-            tr.NUM_LOOKUPS  = vif.NUM_LOOKUPS;
-            tr.NUM_CHOICES  = vif.NUM_CHOICES;
-
-            // Size the dynamic arrays before unpacking into them
-            tr.lookup_table_i = new[vif.RESULT_WIDTH * vif.NUM_LOOKUPS * vif.NUM_CHOICES];
-            tr.input_i        = new[vif.NUM_LOOKUPS * vif.NUM_CHOICES];
-            tr.output_o       = new[vif.RESULT_WIDTH * vif.NUM_LOOKUPS];
+            // Size the dynamic arrays based on the monitor's config object
+            tr.lookup_table_i = new[cfg.RESULT_WIDTH * cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
+            tr.input_i        = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
+            tr.output_o       = new[cfg.RESULT_WIDTH * cfg.NUM_LOOKUPS];
 
             // Use the streaming operator to unpack the fixed-size vector into the dynamic array
             {>>{tr.lookup_table_i}} = vif.lookup_table_i;

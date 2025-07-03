@@ -7,28 +7,31 @@ class lkt_coverage extends uvm_subscriber #(lkt_transaction);
     // Configuration object
     lkt_config cfg;
 
-    // Covergroup to sample transaction properties
-    covergroup lkt_transaction_cg(int lookup_idx, int choice_vec);
+    // --- Covergroup Definition and Instantiation ---
+    covergroup cg;
         option.per_instance = 1;
         
-        // cp_all_choices_per_lookup
-        cp_choice: coverpoint choice_vec {
-            bins choices[] = {[0:$]};
-        }
+        // Coverpoint for the lookup index itself
+        cp_lookup_index: coverpoint lookup_idx;
 
-        // cp_sel_all_zero, cp_illegal_multi_hot
-        cp_selection_type: coverpoint $countones(choice_vec) {
-            bins zero_hot  = {0};
-            bins one_hot   = {1};
-            bins multi_hot = {2,3}; // Assuming max 2 choices for simplicity
-        }
+        // Coverpoint for the value of the choice vector
+        cp_choice_value: coverpoint choice_vec;
+
+        // Coverpoint for the type of selection (zero, one, multi-hot)
+        cp_selection_type: coverpoint selection_type;
+
+        // Cross coverage to ensure every choice is covered for every lookup
+        cross_all_choices: cross cp_lookup_index, cp_choice_value;
     endgroup
 
-    // An array of covergroups, one for each lookup item
-    lkt_transaction_cg cgs[];
+    // Variables to be sampled
+    int lookup_idx;
+    int choice_vec;
+    int selection_type;
 
     function new(string name, uvm_component parent);
         super.new(name, parent);
+        cg = new();
     endfunction
 
     function void build_phase(uvm_phase phase);
@@ -36,20 +39,33 @@ class lkt_coverage extends uvm_subscriber #(lkt_transaction);
         if (!uvm_config_db#(lkt_config)::get(this, "", "config", cfg))
             `uvm_fatal("CONFIG", "Cannot get config object")
         
-        // Create an instance of the covergroup for each lookup
-        cgs = new[cfg.NUM_LOOKUPS];
-        foreach(cgs[i]) begin
-            cgs[i] = new(i, 0);
-        end
+        // Configure the covergroup options now that 'cfg' is valid.
+        // Note: This may cause warnings but is necessary as cfg is not available in new()
+        cg.cp_lookup_index.option.auto_bin_max = cfg.NUM_LOOKUPS;
+        cg.cp_choice_value.option.auto_bin_max = (1 << cfg.NUM_CHOICES);
     endfunction
 
     function void write(lkt_transaction t);
+        // Loop through each lookup item in the transaction
         for (int i = 0; i < cfg.NUM_LOOKUPS; i++) begin
-            logic [cfg.NUM_CHOICES-1:0] slice;
+            int slice_value = 0;
+            int ones_count = 0;
+            
+            // Extract the choice vector for the current lookup item
             for (int j = 0; j < cfg.NUM_CHOICES; j++) begin
-                slice[j] = t.input_i[i*cfg.NUM_CHOICES + j];
+                if (t.input_i[i*cfg.NUM_CHOICES + j]) begin
+                    slice_value |= (1 << j);
+                    ones_count++;
+                end
             end
-            cgs[i].sample(i, slice);
+            
+            // Assign to sampling variables
+            this.lookup_idx = i;
+            this.choice_vec = slice_value;
+            this.selection_type = ones_count;
+
+            // Sample the covergroup
+            cg.sample();
         end
     endfunction
 

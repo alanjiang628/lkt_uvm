@@ -6,7 +6,7 @@ import uvm_pkg::*;
 
 module tb_top;
 
-    // Use the parameters from the config package
+    // Use the parameters from the config package to control instantiation
     parameter int P_RESULT_WIDTH = lkt_config_pkg::RESULT_WIDTH;
     parameter int P_NUM_LOOKUPS  = lkt_config_pkg::NUM_LOOKUPS;
     parameter int P_NUM_CHOICES  = lkt_config_pkg::NUM_CHOICES;
@@ -27,14 +27,14 @@ module tb_top;
         rst_n = 1;
     end
 
-    // Interface instantiation with parameters
+    // Interface instantiation with parameters from the config package
     lkt_if #(
         .RESULT_WIDTH(P_RESULT_WIDTH),
         .NUM_LOOKUPS(P_NUM_LOOKUPS),
         .NUM_CHOICES(P_NUM_CHOICES)
     ) vif(clk, rst_n);
 
-    // DUT instantiation with parameters
+    // DUT instantiation with parameters from the config package
     zh_1hot_lookup_table #(
         .RESULT_WIDTH(P_RESULT_WIDTH),
         .NUM_LOOKUPS(P_NUM_LOOKUPS),
@@ -46,8 +46,8 @@ module tb_top;
     );
 
     initial begin
-        // Place virtual interface in config_db
-        uvm_config_db#(virtual lkt_if)::set(null, "uvm_test_top", "vif", vif);
+        // Place virtual interface in config_db for all components
+        uvm_config_db#(virtual lkt_if)::set(null, "uvm_test_top.*", "vif", vif);
         
         // Run the test
         run_test();

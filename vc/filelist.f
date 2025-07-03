@@ -3,8 +3,8 @@
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/env/agent
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/env/components
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/interface
-+incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/msic
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/sequences
++incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/msic
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/tests
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/tb
 +incdir+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/rtl

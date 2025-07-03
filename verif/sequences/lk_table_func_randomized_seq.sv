@@ -9,24 +9,18 @@ class lk_table_func_randomized_seq extends base_sequence;
     endfunction
 
     task body();
-        lkt_config cfg;
-        if(!uvm_config_db#(lkt_config)::get(m_sequencer, "", "config", cfg))
-           `uvm_fatal("SEQ_CFG_ERR", "Could not get config object in sequence")
-
         req = lkt_transaction::type_id::create("req");
-        start_item(req);
+        start_item(req); // This calls pre_body, which gets the cfg object
         
-        req.RESULT_WIDTH = cfg.RESULT_WIDTH;
-        req.NUM_LOOKUPS  = cfg.NUM_LOOKUPS;
-        req.NUM_CHOICES  = cfg.NUM_CHOICES;
+        // Allocate memory for dynamic arrays now that cfg is available
+        req.input_i = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
+        req.lookup_table_i = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES * cfg.RESULT_WIDTH];
+        req.output_o = new[cfg.NUM_LOOKUPS * cfg.RESULT_WIDTH];
 
-        req.lookup_table_i = new[cfg.RESULT_WIDTH * cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
-        req.input_i        = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
-        req.output_o       = new[cfg.RESULT_WIDTH * cfg.NUM_LOOKUPS];
-
-        // Now that arrays are sized, we can randomize.
-        // The post_randomize hook will ensure input_i is valid.
-        assert(req.randomize());
+        // Now that memory is allocated, we can randomize.
+        if (!req.randomize()) begin
+            `uvm_error("RAND_FAIL", "Transaction randomization failed")
+        end
         
         finish_item(req);
     endtask
