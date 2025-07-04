@@ -3,8 +3,9 @@
 
 package lkt_test_pkg;
     import uvm_pkg::*;
-    import lkt_config_pkg::*; // Import the new config package
-    import lkt_agent_pkg::*;  // Import agent package for lkt_config
+    import lkt_config_pkg::*;
+    import lkt_if_pkg::*;     // Import the new virtual interface type
+    import lkt_agent_pkg::*;
     import lkt_env_pkg::*;
     import lkt_seq_pkg::*;
 
@@ -25,17 +26,22 @@ package lkt_test_pkg;
 
         function void build_phase(uvm_phase phase);
             super.build_phase(phase);
-            cfg = lkt_config::type_id::create("cfg");
             
-            // Set config fields from the central config package
+            // Create the config object and populate it from the compile-time package
+            cfg = lkt_config::type_id::create("cfg");
             cfg.RESULT_WIDTH = lkt_config_pkg::RESULT_WIDTH;
             cfg.NUM_LOOKUPS  = lkt_config_pkg::NUM_LOOKUPS;
             cfg.NUM_CHOICES  = lkt_config_pkg::NUM_CHOICES;
 
-            // Allow test-specific overrides
+            // Allow test-specific overrides before setting it for the environment
             configure_test(cfg);
 
+            // Set the config object for all lower-level components
             uvm_config_db#(lkt_config)::set(this, "*", "config", cfg);
+
+            // The virtual interface is set by tb_top using the lkt_vif typedef.
+            // Components that need it will get it directly using the same typedef.
+            // We don't need to get/set it here in the base_test.
             env = lkt_env::type_id::create("env", this);
         endfunction
 

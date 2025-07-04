@@ -2,9 +2,10 @@
 import uvm_pkg::*;
 `include "lkt_config_pkg.sv" // Import the new config package
 `include "lkt_if.sv"
-`include "lkt_test_pkg.sv"
+`include "lkt_if_pkg.sv" // Import the new virtual interface type package
 
 module tb_top;
+    import lkt_test_pkg::*; // Import the test package
 
     // Use the parameters from the config package to control instantiation
     parameter int P_RESULT_WIDTH = lkt_config_pkg::RESULT_WIDTH;
@@ -46,8 +47,10 @@ module tb_top;
     );
 
     initial begin
-        // Place virtual interface in config_db for all components
-        uvm_config_db#(virtual lkt_if)::set(null, "uvm_test_top.*", "vif", vif);
+        // Set the virtual interface using the centralized typedef.
+        // This ensures the type used here exactly matches the type used
+        // in the UVM components, as both are driven by lkt_config_pkg.
+        uvm_config_db#(lkt_if_pkg::lkt_vif)::set(null, "*", "vif", vif);
         
         // Run the test
         run_test();

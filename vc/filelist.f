@@ -20,6 +20,7 @@
 
 # UVM Environment Packages
 /mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/tb/lkt_config_pkg.sv
+/mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/interface/lkt_if_pkg.sv
 /mnt/c/Users/david.jiang/Desktop/lightning_dv/lkt_uvm/verif/env/lkt_env_pkg.sv
 
 # Sequence Package

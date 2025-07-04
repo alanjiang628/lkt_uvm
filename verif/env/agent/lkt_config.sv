@@ -4,9 +4,6 @@
 class lkt_config extends uvm_object;
     `uvm_object_utils(lkt_config)
 
-    // Virtual interface handle
-    virtual lkt_if vif;
-
     // DUT Parameters
     int RESULT_WIDTH = 3;
     int NUM_LOOKUPS  = 8;

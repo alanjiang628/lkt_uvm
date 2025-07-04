@@ -3,6 +3,7 @@
 
 package lkt_agent_pkg;
   import uvm_pkg::*;
+  import lkt_if_pkg::*; // Import the centralized virtual interface type
   `include "lkt_config.sv"
   `include "lkt_transaction.sv"
   `include "lkt_driver.sv"

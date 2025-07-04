@@ -16,9 +16,8 @@ class lk_table_neg_multi_hot_seq extends base_sequence;
         start_item(req); // This calls pre_body, which gets the cfg object
         
         // Allocate memory for dynamic arrays now that cfg is available
-        req.input_i = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
-        req.lookup_table_i = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES * cfg.RESULT_WIDTH];
-        req.output_o = new[cfg.NUM_LOOKUPS * cfg.RESULT_WIDTH];
+        req.lookup_table_i = new[cfg.NUM_LOOKUPS * cfg.RESULT_WIDTH];
+        req.input_i        = new[cfg.NUM_LOOKUPS * cfg.NUM_CHOICES];
 
         // Randomize the transaction first
         assert(req.randomize());

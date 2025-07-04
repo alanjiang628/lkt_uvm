@@ -5,8 +5,8 @@ class lkt_transaction extends uvm_sequence_item;
     `uvm_object_utils(lkt_transaction)
 
     // --- Data Fields ---
-    // The transaction is a pure data container.
-    // It has no knowledge of the environment's configuration.
+    // These are dynamic arrays. The sequence that creates this transaction
+    // is responsible for sizing them before randomization.
     rand logic lookup_table_i[];
     rand logic input_i[];
     logic output_o[];

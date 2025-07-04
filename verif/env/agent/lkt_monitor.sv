@@ -2,7 +2,7 @@
 `define __LKT_MONITOR_SV__
 
 class lkt_monitor extends uvm_monitor;
-    virtual lkt_if vif;
+    lkt_vif vif; // Use the centralized virtual interface typedef
     uvm_analysis_port #(lkt_transaction) ap;
     lkt_config cfg;
 
@@ -15,10 +15,12 @@ class lkt_monitor extends uvm_monitor;
 
     function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        if(!uvm_config_db#(virtual lkt_if)::get(this, "", "vif", vif))
-            `uvm_fatal("NO_IF", "Virtual interface not found!")
         if(!uvm_config_db#(lkt_config)::get(this, "", "config", cfg))
-            `uvm_fatal("NO_CFG", "Config object not found!")
+            `uvm_fatal("NO_CONFIG", "Config object not found in monitor")
+        
+        // Get the virtual interface using the centralized typedef
+        if(!uvm_config_db#(lkt_vif)::get(this, "", "vif", vif))
+            `uvm_fatal("NO_VIF", "Virtual interface not found in monitor")
     endfunction
 
     task run_phase(uvm_phase phase);
